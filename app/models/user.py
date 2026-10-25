@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
     # is_banned: admin khóa tài khoản (module bảo mật - admin panel). nullable=True để lưới an toàn
     # trong app/__init__.py tự ALTER TABLE thêm cột cho DB SQLite cũ; None được coi như False ở mọi nơi dùng.
     is_banned = db.Column(db.Boolean, nullable=True, default=False)
+    is_watched = db.Column(db.Boolean, nullable=True, default=False)
     avatar_url = db.Column(db.String(255), nullable=True)
     profile_bg = db.Column(db.String(255), nullable=True)   # ảnh nền khung trang cá nhân (/static/uploads/backgrounds/...); NULL = nền mặc định
 
@@ -63,4 +64,4 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f'<User {self.username}>'

@@ -231,6 +231,8 @@ def create_post():
             db.session.add(photo)
 
         db.session.commit()
+        log_security_event(event_type="POST_CREATED", severity="INFO",
+                            status_code=201, action_taken="LOGGED_ONLY") 
         # Gắn thẻ @ trong caption -> báo cho người được tag (bỏ qua người không xem được bài / chính mình)
         if notify_mentions(caption, current_user.id, current_user.id, post=post):
             db.session.commit()
@@ -828,6 +830,8 @@ def create_comment(post_id):
     )
 
     db.session.add(comment)
+    log_security_event(event_type="COMMENT_CREATED", severity="INFO",
+                        status_code=201, action_taken="LOGGED_ONLY")
     # @username trong bình luận -> thông báo "nhắc đến bạn"; chủ bài được tag thì chỉ nhận 1 thông báo (mention)
     tagged = notify_mentions(content, current_user.id, post.user_id, post=post)
     if post.user_id not in tagged:

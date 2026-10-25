@@ -320,6 +320,7 @@ def cards_for_profile(plans, viewer_id):
 
 @plans_bp.route('', methods=['GET'])
 @plans_bp.route('/', methods=['GET'])
+@login_required 
 def index():
     """Trang Lịch trình: 1 danh sách duy nhất (công khai + lịch trình riêng tư của mình), lọc giá / địa điểm / loại chuyến đi."""
     from app.models import Location
@@ -482,6 +483,7 @@ def _suggest_posts(plan):
 
 
 @plans_bp.route('/<int:plan_id>/panel', methods=['GET'])
+@login_required  
 def panel(plan_id):
     """Nội dung HTML của cửa sổ chi tiết (modal) — cùng quyền xem với trang chi tiết."""
     plan = _viewable_or_404(plan_id)
@@ -504,8 +506,9 @@ def panel(plan_id):
 
 
 @plans_bp.route('/<int:plan_id>/attachment', methods=['GET'])
+@login_required
 def attachment(plan_id):
-    """Tải TỆP ĐÍNH KÈM mà người đăng đã up (chỉ người có quyền xem lịch trình)."""
+    """Tải TỆP ĐÍNH KÈM mà người đăng đã up (chỉ người có quyền xem lịch trình, phải đăng nhập)."""
     plan = _viewable_or_404(plan_id)
     full = _attachment_path(plan)
     if not full:

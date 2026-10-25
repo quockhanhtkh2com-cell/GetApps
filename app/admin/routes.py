@@ -556,6 +556,11 @@ EVENT_TYPE_LABELS = {
     "SQLI_DETECTED": "SQL Injection",
     "XSS_DETECTED": "XSS",
     "ACCESS_DENIED_403": "Truy cập bị từ chối (403)",
+    "USER_REGISTER": "Đăng ký tài khoản",
+    "USER_LOGIN": "Đăng nhập",
+    "POST_CREATED": "Đăng bài viết",
+    "COMMENT_CREATED": "Bình luận",
+    "WATCHED_ACTION": "Hoạt động tài khoản theo dõi",
 }
 
 

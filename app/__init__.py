@@ -222,7 +222,15 @@ def create_app(config_override=None):
     app.register_blueprint(admin_bp, url_prefix="/admin")
 
     csrf.exempt(api_bp)
-
+    @app.before_request
+    def _log_watched_user_activity():
+        """Nếu user hiện tại bị admin đánh dấu watchlist (is_watched) -> ghi lại MỌI request của họ
+        vào security_logs, để trang /admin/security-logs xem được toàn bộ hoạt động của người bị theo dõi."""
+        from flask_login import current_user
+        if getattr(current_user, "is_authenticated", False) and getattr(current_user, "is_watched", False):
+            from app.security_logging import log_security_event
+            log_security_event(event_type="WATCHED_ACTION", severity="INFO",
+                                status_code=200, action_taken="LOGGED_ONLY")
     @app.errorhandler(429)
     def ratelimit_handler(e):
         from flask import request, jsonify, render_template

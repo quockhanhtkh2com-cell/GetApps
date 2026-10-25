@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "flask --app run db stamp head && gunicorn -w 2 --forwarded-allow-ips='*' -b 0.0.0.0:${PORT:-5000} run:app"]
+CMD ["sh", "-c", "flask --app run db stamp head && gunicorn -w 2 --forwarded-allow-ips='*' --access-logfile - --error-logfile - -b 0.0.0.0:${PORT:-5000} run:app"]

@@ -484,7 +484,8 @@ def register():
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
-
+        log_security_event(event_type="USER_REGISTER", severity="INFO",
+                            status_code=201, action_taken="LOGGED_ONLY")
         login_user(user)
         return jsonify({
             "message": "Đăng ký thành công",
@@ -512,9 +513,12 @@ def register():
                 email=email,
                 full_name=full_name
             )
+
             user.set_password(form.password.data)
             db.session.add(user)
             db.session.commit()
+            log_security_event(event_type="USER_REGISTER", severity="INFO",
+                                status_code=201, action_taken="LOGGED_ONLY")
 
             if current_user.is_authenticated:
                 logout_user()
@@ -576,6 +580,8 @@ def login():
         if current_user.is_authenticated:
             logout_user()
         login_user(user)
+        log_security_event(event_type="USER_LOGIN", severity="INFO",
+                            status_code=200, action_taken="LOGGED_ONLY")
         return jsonify({"message": "Đăng nhập thành công", "username": user.username})
 
     form = LoginForm()
@@ -606,6 +612,8 @@ def login():
         if current_user.is_authenticated:
             logout_user()
         login_user(user, remember=form.remember_me.data)
+        log_security_event(event_type="USER_LOGIN", severity="INFO",
+                            status_code=200, action_taken="LOGGED_ONLY")
         flash(f"Chào mừng trở lại, {user.nickname or user.username}!", "success")
 
         if not user.profile_completed:
