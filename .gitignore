@@ -11,3 +11,8 @@ cookies*.txt
 
 # Raw data (PBF/Parquet ~430MB) - never commit, never copy into Docker
 app/data/data_draw/
+
+# Database (chua tai khoan nguoi dung) - khong commit
+*.db
+*.db.bak
+*.sqlite

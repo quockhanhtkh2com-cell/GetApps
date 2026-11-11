@@ -1,12 +1,26 @@
 import os
+import secrets
+import warnings
 from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def _secret(name):
+    """Đọc secret từ .env. Nếu thiếu thì sinh khóa ngẫu nhiên cho phiên chạy này
+    (chỉ phù hợp khi dev: session sẽ mất mỗi lần khởi động lại) thay vì dùng một
+    giá trị cố định nằm trong mã nguồn công khai."""
+    value = os.environ.get(name)
+    if not value:
+        warnings.warn(f"{name} chưa được đặt trong .env — đang dùng khóa ngẫu nhiên tạm thời.")
+        value = secrets.token_hex(32)
+    return value
+
+
 class Config:
     APP_NAME = "GetApps"
-    SECRET_KEY = os.environ.get("SECRET_KEY") or "getapps-dev-secret-key-pwd301-se173285"
-    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY") or "getapps-dev-jwt-secret-key-pwd301-se173285"
+    SECRET_KEY = _secret("SECRET_KEY")
+    JWT_SECRET_KEY = _secret("JWT_SECRET_KEY")
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "sqlite:///app.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TEMPLATES_AUTO_RELOAD = True
